@@ -1,9 +1,23 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import { PrismaClient } from "@prisma/client";
+import type { NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import { useEffect } from "react";
+import styles from "../styles/Home.module.css";
 
-const Home: NextPage = () => {
+export interface Todo {
+  name: string;
+  id: number;
+  finished: boolean;
+  createdAt: Date;
+}
+
+export interface TodosProps {
+  todos: Todo[];
+}
+
+const Home: NextPage<TodosProps> = (props) => {
+
   return (
     <div className={styles.container}>
       <Head>
@@ -18,7 +32,7 @@ const Home: NextPage = () => {
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
+          Get started by editing{" "}
           <code className={styles.code}>pages/index.tsx</code>
         </p>
 
@@ -59,14 +73,26 @@ const Home: NextPage = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
+  );
+};
+
+export async function getServerSideProps() {
+  const prisma = new PrismaClient();
+
+  const todos = await prisma.todo.findMany();
+  prisma.$disconnect();
+  return {
+    props: {
+      todos: JSON.parse(JSON.stringify(todos)),
+    },
+  };
 }
 
-export default Home
+export default Home;
