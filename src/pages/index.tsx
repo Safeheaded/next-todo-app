@@ -1,13 +1,14 @@
-import { Button } from "@chakra-ui/react";
-import { PrismaClient } from "@prisma/client";
+import {
+  Box,
+  Button,
+  Flex,
+  Input,
+  InputGroup,
+  InputRightElement,
+} from "@chakra-ui/react";
+import { PrismaClient, Todo } from "@prisma/client";
+import { AddTodo } from "components/addTodo";
 import type { NextPage } from "next";
-
-export interface Todo {
-  name: string;
-  id: number;
-  finished: boolean;
-  createdAt: Date;
-}
 
 export interface TodosProps {
   todos: Todo[];
@@ -15,7 +16,18 @@ export interface TodosProps {
 
 const Home: NextPage<TodosProps> = (props) => {
 
-  return <Button bg="alert">Test</Button>
+  return (
+    <Flex
+      width="100%"
+      minHeight="100vh"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Box>
+        <AddTodo />
+      </Box>
+    </Flex>
+  );
 };
 
 export async function getServerSideProps() {
